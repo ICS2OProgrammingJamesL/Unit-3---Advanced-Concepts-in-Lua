@@ -23,26 +23,58 @@ local scene = composer.newScene( sceneName )
 -----------------------------------------------------------------------------------------
  
 -- The local variables for this scene
-local beetleship
+local CompanyLogo
 local scrollXSpeed = 8
 local scrollYSpeed = -3
+local scrollSpeed = -7
 local jungleSounds = audio.loadSound("Sounds/animals144.mp3")
 local jungleSoundsChannel
+local Comet = display.newImage("Images/Comet.png", 925, 0)
+local Comet2 = display.newImage("Images/Comet.png", 100, 0)
+
 
 --------------------------------------------------------------------------------------------
 -- LOCAL FUNCTIONS
 --------------------------------------------------------------------------------------------
 
 -- The function that moves the beetleship across the screen
-local function moveBeetleship()
-    beetleship.x = beetleship.x + scrollXSpeed
-    beetleship.y = beetleship.y + scrollYSpeed
+-- function: MoveComet
+-- Input: this function accepts an event listener
+-- Output: none
+-- Description: This function adds the scroll speed to the x-value of the ship
+local function MoveComet(event)
+    -- add the scroll speed to the x-value of the ship
+    Comet.y = Comet.y - scrollSpeed
+    Comet.x = Comet.x + scrollSpeed
+    -- make car opacity fade out
+    Comet.alpha = Comet.alpha - 0.001
+    --CompanyLogo.alpha = CompanyLogo.alpha - 0.001
 end
 
 -- The function that will go to the main menu 
 local function gotoMainMenu()
     composer.gotoScene( "main_menu" )
 end
+
+-- function: MoveComet
+-- Input: this function accepts an event listener
+-- Output: none
+-- Description: This function adds the scroll speed to the x-value of the ship
+local function MoveComet(event)
+    -- add the scroll speed to the x-value of the ship
+    Comet2.y = Comet2.y - scrollSpeed
+    Comet2.x = Comet2.x - scrollSpeed
+    -- make car opacity fade out
+    Comet.alpha = Comet.alpha - 0.001
+end
+
+-- MoveComet will be called over and over again
+Runtime:addEventListener("enterFrame", MoveComet2)
+
+-- scale the comet
+
+Comet:scale( 0.07, 0.07)
+Comet2:scale( 0.07, 0.07)
 
 -----------------------------------------------------------------------------------------
 -- GLOBAL SCENE FUNCTIONS
@@ -58,7 +90,7 @@ function scene:create( event )
     display.setDefault("background", 0, 0, 0)
 
     -- Insert the beetleship image
-    beetleship = display.newImageRect("Images/beetleship.png", 200, 200)
+    beetleship = display.newImageRect("Images/CompanyLogo.png", 200, 200)
 
     -- set the initial x and y position of the beetleship
     beetleship.x = 100
@@ -69,6 +101,9 @@ function scene:create( event )
 
 end -- function scene:create( event )
 
+-- rotate the second comet so it faces dowm
+
+Comet2:rotate(260)
 --------------------------------------------------------------------------------------------
 
 -- The function called when the scene is issued to appear on screen
@@ -92,8 +127,8 @@ function scene:show( event )
         -- start the splash screen music
         jungleSoundsChannel = audio.play(jungleSounds )
 
-        -- Call the moveBeetleship function as soon as we enter the frame.
-        Runtime:addEventListener("enterFrame", moveBeetleship)
+      -- MoveComet will be called over and over again
+        Runtime:addEventListener("enterFrame", MoveComet)
 
         -- Go to the main menu screen after the given time.
         timer.performWithDelay ( 3000, gotoMainMenu)          
