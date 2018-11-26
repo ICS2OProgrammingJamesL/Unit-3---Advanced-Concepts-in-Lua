@@ -58,11 +58,13 @@ local numLives = 2
 
 local rArrow 
 local uArrow
+local lArrow
 
 local motionx = 0
 local SPEED = 5
 local LINEAR_VELOCITY = -100
 local GRAVITY = 7
+local SPEED2 = -5
 
 local leftW 
 local topW
@@ -91,6 +93,11 @@ local function up (touch)
     end
 end
 
+local function left (touch)
+    motionx = SPEED2
+    character.xScale = -1
+end
+
 -- Move character horizontally
 local function movePlayer (event)
     character.x = character.x + motionx
@@ -107,11 +114,13 @@ end
 local function AddArrowEventListeners()
     rArrow:addEventListener("touch", right)
     uArrow:addEventListener("touch", up)
+    lArrow:addEventListener("touch", left)
 end
 
 local function RemoveArrowEventListeners()
     rArrow:removeEventListener("touch", right)
     uArrow:removeEventListener("touch", up)
+    lArrow:addEventListener("touch", left)
 end
 
 local function AddRuntimeListeners()
@@ -282,6 +291,7 @@ local function AddPhysicsBodies()
     physics.addBody( spikes2platform, "static", { density=1.0, friction=0.3, bounce=0.2 } )
     physics.addBody( spikes3platform, "static", { density=1.0, friction=0.3, bounce=0.2 } )
 
+    physics.addBody(rightW, "static", {density=1, friction=0.3, bounce=0.2} )
     physics.addBody(leftW, "static", {density=1, friction=0.3, bounce=0.2} )
     physics.addBody(topW, "static", {density=1, friction=0.3, bounce=0.2} )
     physics.addBody(floor, "static", {density=1, friction=0.3, bounce=0.2} )
@@ -307,6 +317,7 @@ local function RemovePhysicsBodies()
     physics.removeBody(spikes2platform)
     physics.removeBody(spikes3platform)
 
+    physics.removeBody(rightW)
     physics.removeBody(leftW)
     physics.removeBody(topW)
     physics.removeBody(floor)
@@ -455,13 +466,22 @@ function scene:create( event )
     -- Insert objects into the scene group in order to ONLY be associated with this scene
     sceneGroup:insert( rArrow)
 
-    --Insert the left arrow
+
+    --Insert the up arrow
     uArrow = display.newImageRect("Images/UpArrowUnpressed.png", 50, 100)
     uArrow.x = display.contentWidth * 8.2 / 10
     uArrow.y = display.contentHeight * 8.5 / 10
 
-    -- Insert objects into the scene group in order to ONLY be associated with this scene
+     -- Insert objects into the scene group in order to ONLY be associated with this scene
     sceneGroup:insert( uArrow)
+
+    --Insert the left arrow
+    lArrow = display.newImageRect("Images/LeftArrowUnpressed.png", 100, 50)
+    lArrow.x = display.contentWidth * 7.2 / 10
+    lArrow.y = display.contentHeight * 9.5 / 10
+
+    -- Insert objects into the scene group in order to ONLY be associated with this scene
+    sceneGroup:insert( lArrow)
 
     --WALLS--
     leftW = display.newLine( 0, 0, 0, display.contentHeight)
@@ -470,7 +490,7 @@ function scene:create( event )
     -- Insert objects into the scene group in order to ONLY be associated with this scene
     sceneGroup:insert( leftW )
 
-    rightW = display.newLine( 0, 0, 0, display.contentHeight)
+    rightW = display.newLine( 1024, 0, 10240, display.contentHeight)
     rightW.x = display.contentCenterX * 2
     rightW.isVisible = true
 
